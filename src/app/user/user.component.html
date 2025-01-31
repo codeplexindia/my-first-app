@@ -1,0 +1,7 @@
+<div>
+    <button (click)="onSelectedUser()">
+        <img [src]="imagePathSignal()" 
+        [alt]="selectedUserSignal().name">
+        <span>{{selectedUserSignal().name}}</span>
+    </button>
+</div>
