@@ -1,29 +1,29 @@
-import { Component, computed, signal } from '@angular/core';
-import { DUMMY_USERS } from '../dummy-users';
-
-const randomIndex = Math.floor(Math.random() * DUMMY_USERS.length);
+import { Component, EventEmitter, Input, output, Output } from '@angular/core';
+import { User } from './user.model';
 
 @Component({
   selector: 'app-user',
   standalone: true,
   imports: [],
   templateUrl: './user.component.html',
-  styleUrl: './user.component.css'
+  styleUrl: './user.component.css',
 })
 export class UserComponent {
-   selectedUser = DUMMY_USERS[randomIndex]; //using zone.js
+  @Input({ required: true }) user: User | undefined;
+  @Input({ required: true }) selected!: boolean;
+  @Output() selectedUser = new EventEmitter<string>();
 
-   selectedUserSignal = signal(DUMMY_USERS[randomIndex]); // using signal
+  //selectedUser = output<string>(); //signal - automatically create event emmitter
+  //avatar = input.required<string>();
+  //name = input.required<string>();
+  //imagepath = computed(() => '/assets/users/' + this.avatar()); // using signal
 
-   imagePathSignal = computed(()=> 'assets/users/' + this.selectedUserSignal().avatar);
+  get imagePath() {
+    return '/assets/users/' + this.user?.avatar;
+  }
 
-   get imagePath() {
-     return 'assets/users/' + this.selectedUser.avatar;
-   } // using zone.js
-
-   onSelectedUser(){
-    const randomIndex = Math.floor(Math.random() * DUMMY_USERS.length);
-     this.selectedUser = DUMMY_USERS[randomIndex]; // using zone.js
-     this.selectedUserSignal.set(DUMMY_USERS[randomIndex]);
-   }
+  onSelectedUser() {
+    this.selectedUser.emit(this.user?.id);
+    //this.selectedUser.emit(this.userId);
+  }
 }
